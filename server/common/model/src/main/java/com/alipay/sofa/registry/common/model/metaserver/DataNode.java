@@ -39,13 +39,16 @@ public class DataNode implements Node, HashNode {
 
     private long         registrationTimestamp;
 
+    private String       area;
+
     /**
      * constructor
      * @param nodeUrl
      * @param dataCenter
      */
-    public DataNode(URL nodeUrl, String dataCenter) {
+    public DataNode(URL nodeUrl, String dataCenter, String area) {
         this.nodeUrl = nodeUrl;
+        this.area = area;
         this.nodeName = nodeUrl.getIpAddress();
         this.dataCenter = dataCenter;
         this.nodeStatus = NodeStatus.INIT;
@@ -57,9 +60,10 @@ public class DataNode implements Node, HashNode {
      * @param dataCenter
      * @param status
      */
-    public DataNode(URL nodeUrl, String dataCenter, NodeStatus status) {
-        this(nodeUrl, dataCenter);
+    public DataNode(URL nodeUrl, String dataCenter, NodeStatus status, String area) {
+        this(nodeUrl, dataCenter, area);
         this.nodeStatus = status;
+        this.area = area;
     }
 
     @Override
@@ -88,6 +92,10 @@ public class DataNode implements Node, HashNode {
             return false;
         }
 
+        if (area != null ? !area.equals(that.area) : that.area != null) {
+            return false;
+        }
+
         if (registrationTimestamp != that.registrationTimestamp) {
             return false;
         }
@@ -107,6 +115,7 @@ public class DataNode implements Node, HashNode {
         int result = nodeName != null ? nodeName.hashCode() : 0;
         result = 31 * result + (dataCenter != null ? dataCenter.hashCode() : 0);
         result = 31 * result + (regionId != null ? regionId.hashCode() : 0);
+        result = 31 * result + (area != null ? area.hashCode() : 0);
         result = 31 * result + (nodeStatus != null ? nodeStatus.hashCode() : 0);
         result = 31 * result + (int) (registrationTimestamp ^ (registrationTimestamp >>> 32));
         result = 31
@@ -142,6 +151,11 @@ public class DataNode implements Node, HashNode {
     @Override
     public String getNodeName() {
         return nodeName;
+    }
+
+    @Override
+    public String getArea() {
+        return area;
     }
 
     /**

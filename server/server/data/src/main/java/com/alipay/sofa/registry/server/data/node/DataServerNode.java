@@ -32,21 +32,29 @@ public class DataServerNode implements HashNode {
 
     private Connection connection;
 
+    private String     area;
+
     /**
      * constructor
      * @param ip
      * @param dataCenter
      * @param connection
      */
-    public DataServerNode(String ip, String dataCenter, Connection connection) {
+    public DataServerNode(String ip, String dataCenter, Connection connection, String area) {
         this.ip = ip;
         this.dataCenter = dataCenter;
         this.connection = connection;
+        this.area = area;
     }
 
     @Override
     public String getNodeName() {
         return ip;
+    }
+
+    @Override
+    public String getArea() {
+        return area;
     }
 
     /**
@@ -80,7 +88,6 @@ public class DataServerNode implements HashNode {
     public String toString() {
         final StringBuilder sb = new StringBuilder("DataServerNode{");
         sb.append("ip='").append(ip).append('\'');
-        sb.append(", dataCenter='").append(dataCenter);
         sb.append('}');
         return sb.toString();
     }

@@ -44,6 +44,11 @@ public class TestNode implements HashNode {
         return nodeName;
     }
 
+    @Override
+    public String getArea() {
+        return null;
+    }
+
     /**
      * Equals boolean.
      *

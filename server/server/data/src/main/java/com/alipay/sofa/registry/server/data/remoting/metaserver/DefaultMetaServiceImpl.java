@@ -151,7 +151,7 @@ public class DefaultMetaServiceImpl implements IMetaServerService {
     @Override
     public List<DataServerNode> getDataServers(String dataCenter, String dataInfoId) {
         return DataServerNodeFactory.computeDataServerNodes(dataCenter, dataInfoId,
-            dataServerConfig.getStoreNodes());
+            dataServerConfig.getStoreNodes(), dataServerConfig.getDataAreaSet());
     }
 
     @Override
@@ -221,7 +221,8 @@ public class DefaultMetaServiceImpl implements IMetaServerService {
                     try {
                         RenewNodesRequest<DataNode> renewNodesRequest = new RenewNodesRequest<>(
                             new DataNode(new URL(DataServerConfig.IP),
-                                dataServerConfig.getLocalDataCenter()));
+                                dataServerConfig.getLocalDataCenter(),
+                                dataServerConfig.getDataArea()));
                         metaNodeExchanger.request(new Request() {
                             @Override
                             public Object getRequestBody() {

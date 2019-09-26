@@ -16,17 +16,16 @@
  */
 package com.alipay.sofa.registry.server.data.bootstrap;
 
+import com.alipay.sofa.registry.net.NetUtil;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import com.alipay.sofa.registry.net.NetUtil;
 
 /**
  *
@@ -118,6 +117,12 @@ public class DataServerConfig {
     private int                sessionServerNotifierRetryExecutorQueueSize  = 1000000;
 
     private int                renewEnableDelaySec                          = 30;
+
+    private String             dataArea;
+
+    private String             dataAreaConfig;
+
+    private Set<String>        dataAreaSet;
 
     /**
      * constructor
@@ -802,6 +807,72 @@ public class DataServerConfig {
      */
     public void setSessionServerNotifierRetryExecutorQueueSize(int sessionServerNotifierRetryExecutorQueueSize) {
         this.sessionServerNotifierRetryExecutorQueueSize = sessionServerNotifierRetryExecutorQueueSize;
+    }
+
+    /**
+     * Getter method for property <tt>dataArea</tt>.
+     *
+     * @return property value of dataArea
+     */
+    public String getDataArea() {
+        return dataArea;
+    }
+
+    /**
+     * Setter method for property <tt>dataArea</tt>.
+     *
+     * @param dataArea  value to be assigned to property dataArea
+     */
+    public void setDataArea(String dataArea) {
+        this.dataArea = dataArea;
+    }
+
+    /**
+     * Getter method for property <tt>dataAreaSet</tt>.
+     *
+     * @return property value of dataAreaSet
+     */
+    public Set<String> getDataAreaSet() {
+        if (dataAreaSet == null) {
+            dataAreaSet = new HashSet<>();
+            String areas = getDataAreaConfig();
+            if (areas != null) {
+                String[] temp = areas.split(",");
+                for (String s : temp) {
+                    if (s != null && !s.isEmpty()) {
+                        dataAreaSet.add(s);
+                    }
+                }
+            }
+        }
+        return dataAreaSet;
+    }
+
+    /**
+     * Setter method for property <tt>dataAreaSet</tt>.
+     *
+     * @param dataAreaSet  value to be assigned to property dataAreaSet
+     */
+    public void setDataAreaSet(Set<String> dataAreaSet) {
+        this.dataAreaSet = dataAreaSet;
+    }
+
+    /**
+     * Getter method for property <tt>dataAreaConfig</tt>.
+     *
+     * @return property value of dataAreaConfig
+     */
+    public String getDataAreaConfig() {
+        return dataAreaConfig;
+    }
+
+    /**
+     * Setter method for property <tt>dataAreaConfig</tt>.
+     *
+     * @param dataAreaConfig  value to be assigned to property dataAreaConfig
+     */
+    public void setDataAreaConfig(String dataAreaConfig) {
+        this.dataAreaConfig = dataAreaConfig;
     }
 
     @Override

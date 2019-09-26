@@ -79,7 +79,8 @@ public class DataServerCache {
      * @param newItem
      * @return changedMap(datacenter, serverIp)
      */
-    public Map<String, Set<String>> compareAndSet(DataServerChangeItem newItem, FromType fromType) {
+    public Map<String, Map<String, DataNode>> compareAndSet(DataServerChangeItem newItem,
+                                                            FromType fromType) {
         synchronized (DataServerCache.class) {
             // versionMap: datacenter -> version
             Map<String, Long> newVersionMap = newItem.getVersionMap();
@@ -116,7 +117,7 @@ public class DataServerCache {
                 }
             }
 
-            Map<String, Set<String>> changedMap = new HashMap<>();
+            Map<String, Map<String, DataNode>> changedMap = new HashMap<>();
             Map<String, Long> oldVersionMap = new HashMap<>(dataServerChangeItem.getVersionMap());
             Map<String, Map<String, DataNode>> newServerMap = newItem.getServerMap();
 
@@ -128,11 +129,11 @@ public class DataServerCache {
                         continue;
                     }
                 }
-                changedMap.put(dataCenter, newServerMap.get(dataCenter).keySet());
+                changedMap.put(dataCenter, newServerMap.get(dataCenter));
             }
             if (!oldVersionMap.isEmpty()) {
                 for (String dataCenter : oldVersionMap.keySet()) {
-                    changedMap.put(dataCenter, new HashSet<>());
+                    changedMap.put(dataCenter, new HashMap<>());
                 }
             }
             if (changedMap.containsKey(dataServerConfig.getLocalDataCenter())) {

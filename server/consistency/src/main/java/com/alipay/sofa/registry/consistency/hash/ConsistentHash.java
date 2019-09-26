@@ -159,7 +159,10 @@ public class ConsistentHash<T extends HashNode> {
      * @param disasterList disaster region name
      * @return the n unique nodes for
      */
-    public List<T> getNUniqueNodesFor(Object key, int n, List<String> disasterList) {
+    public List<T> getNUniqueNodesFor(Object key, int n, Set<String> disasterList) {
+        if(disasterList == null || disasterList.isEmpty()){
+            return getNUniqueNodesFor(key,n);
+        }
         if (circle.isEmpty()) {
             return Collections.emptyList();
         }
@@ -168,8 +171,8 @@ public class ConsistentHash<T extends HashNode> {
             n = realNodes.size();
         }
 
-        List<String> disasters = disasterList != null && !disasterList.isEmpty() ? disasterList
-            : new ArrayList<>();
+        Set<String> disasters = disasterList != null && !disasterList.isEmpty() ? disasterList
+            : new HashSet<>();
         List<T> list = new ArrayList<>(n);
         int hash = hashFunction.hash(key);
         for (int i = 0; i < n; i++) {
@@ -181,7 +184,7 @@ public class ConsistentHash<T extends HashNode> {
             T candidate = circle.get(hash);
             if (!list.contains(candidate)) {
 
-                while (!disasters.isEmpty() && !disasters.contains(candidate.getNodeName())) {
+                while (!disasters.isEmpty() && !disasters.contains(candidate.getArea())) {
                     hash++;
                     if (!circle.containsKey(hash)) {
                         // go to next element.
@@ -192,7 +195,7 @@ public class ConsistentHash<T extends HashNode> {
                 }
                 list.add(candidate);
                 if (!disasters.isEmpty()) {
-                    disasters.remove(candidate.getNodeName());
+                    disasters.remove(candidate.getArea());
                 }
 
             } else {

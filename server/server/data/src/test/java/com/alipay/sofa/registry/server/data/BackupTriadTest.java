@@ -40,15 +40,15 @@ public class BackupTriadTest {
     @Test
     public void doTest() {
         List<DataNode> nodeList = new ArrayList<>();
-        nodeList.add(new DataNode(new URL("192.168.0.1", 9632), "DefaultDataCenter"));
-        nodeList.add(new DataNode(new URL("192.168.0.2", 9632), "DefaultDataCenter"));
-        nodeList.add(new DataNode(new URL("192.168.0.3", 9632), "DefaultDataCenter"));
+        nodeList.add(new DataNode(new URL("192.168.0.1", 9632), "DefaultDataCenter", "a"));
+        nodeList.add(new DataNode(new URL("192.168.0.2", 9632), "DefaultDataCenter", "a"));
+        nodeList.add(new DataNode(new URL("192.168.0.3", 9632), "DefaultDataCenter", "a"));
         BackupTriad backupTriad = new BackupTriad("TestDataInfoId", nodeList);
         assertFalse(backupTriad.containsSelf());
 
         List<DataNode> newTriad = new ArrayList<>();
-        newTriad.add(new DataNode(new URL("192.168.0.2", 9632), "DefaultDataCenter"));
-        newTriad.add(new DataNode(new URL("192.168.0.4", 9632), "DefaultDataCenter"));
+        newTriad.add(new DataNode(new URL("192.168.0.2", 9632), "DefaultDataCenter", "a"));
+        newTriad.add(new DataNode(new URL("192.168.0.4", 9632), "DefaultDataCenter", "a"));
         Set<String> notWorking = new HashSet<>();
         notWorking.add("192.168.0.2");
         assertEquals(2, backupTriad.getNewJoined(newTriad, notWorking).size());
@@ -62,8 +62,8 @@ public class BackupTriadTest {
         assertEquals("AnotherTestDataInfoId", backupTriad.getDataInfoId());
 
         nodeList = new ArrayList<>();
-        nodeList.add(new DataNode(new URL("192.168.0.1", 9632), "DefaultDataCenter"));
-        nodeList.add(new DataNode(new URL(DataServerConfig.IP, 9632), "DefaultDataCenter"));
+        nodeList.add(new DataNode(new URL("192.168.0.1", 9632), "DefaultDataCenter", "a"));
+        nodeList.add(new DataNode(new URL(DataServerConfig.IP, 9632), "DefaultDataCenter", "a"));
         backupTriad.setTriad(nodeList);
         assertTrue(backupTriad.containsSelf());
         assertEquals(2, backupTriad.getTriad().size());

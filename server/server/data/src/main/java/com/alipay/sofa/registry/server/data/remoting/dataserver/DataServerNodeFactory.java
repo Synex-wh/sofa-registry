@@ -83,7 +83,7 @@ public class DataServerNodeFactory {
         if (dataServerConfig.getLocalDataCenter().equals(dataCenter)) {
             if (!MAP.get(dataCenter).keySet().contains(DataServerConfig.IP)) {
                 dataServerNodes.add(new DataServerNode(DataServerConfig.IP, dataServerConfig
-                    .getLocalDataCenter(), null));
+                    .getLocalDataCenter(), null, dataServerConfig.getDataArea()));
             }
         }
         CONSISTENT_HASH_MAP.put(dataCenter,
@@ -98,7 +98,7 @@ public class DataServerNodeFactory {
         if (init.compareAndSet(false, true)) {
             List<DataServerNode> dataServerNodes = Lists.newArrayList();
             dataServerNodes.add(new DataServerNode(DataServerConfig.IP, dataServerConfig
-                .getLocalDataCenter(), null));
+                .getLocalDataCenter(), null, dataServerConfig.getDataArea()));
             CONSISTENT_HASH_MAP.put(dataServerConfig.getLocalDataCenter(), new ConsistentHash<>(
                 dataServerConfig.getNumberOfReplicas(), dataServerNodes));
         }
@@ -200,10 +200,11 @@ public class DataServerNodeFactory {
     }
 
     public static List<DataServerNode> computeDataServerNodes(String dataCenter, String dataInfoId,
-                                                              int backupNodes) {
+                                                              int backupNodes, Set<String> dataAreas) {
         ConsistentHash<DataServerNode> consistentHash = CONSISTENT_HASH_MAP.get(dataCenter);
         if (consistentHash != null) {
-            return CONSISTENT_HASH_MAP.get(dataCenter).getNUniqueNodesFor(dataInfoId, backupNodes);
+            return CONSISTENT_HASH_MAP.get(dataCenter).getNUniqueNodesFor(dataInfoId, backupNodes,
+                dataAreas);
         }
         return null;
     }

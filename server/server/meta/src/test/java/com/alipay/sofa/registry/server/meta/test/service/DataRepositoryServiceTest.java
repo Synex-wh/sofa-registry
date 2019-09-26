@@ -75,7 +75,7 @@ public class DataRepositoryServiceTest {
         });
 
         RenewDecorate<DataNode> metaNode = new RenewDecorate(new DataNode(new URL(ip, 0),
-            dataCenter));
+            dataCenter, "a"));
         metaRepositoryService.put(ip, metaNode);
 
         Assert.assertEquals(metaRepositoryService.get(ip).getRenewal().getIp(), ip);
@@ -117,7 +117,7 @@ public class DataRepositoryServiceTest {
         });
 
         RenewDecorate<DataNode> metaNode = new RenewDecorate(new DataNode(new URL(ip, 0),
-            dataCenter));
+            dataCenter, "a"));
 
         metaRepositoryService.put(ip, metaNode);
 
@@ -162,9 +162,9 @@ public class DataRepositoryServiceTest {
         });
 
         RenewDecorate<DataNode> metaNode = new RenewDecorate(new DataNode(new URL(ip, 0),
-            dataCenter));
+            dataCenter, "a"));
 
-        DataNode metaNodeFix = new DataNode(new URL(ip, 0), dataCenter);
+        DataNode metaNodeFix = new DataNode(new URL(ip, 0), dataCenter, "a");
         metaNodeFix.setNodeStatus(NodeStatus.WORKING);
 
         RenewDecorate<DataNode> metaNode2 = new RenewDecorate(metaNodeFix);
@@ -217,9 +217,9 @@ public class DataRepositoryServiceTest {
         });
 
         RenewDecorate<DataNode> metaNode = new RenewDecorate(new DataNode(new URL(ip, 0),
-            dataCenter));
+            dataCenter, "a"));
 
-        DataNode metaNodeFix = new DataNode(new URL(ip, 0), dataCenter);
+        DataNode metaNodeFix = new DataNode(new URL(ip, 0), dataCenter, "a");
         metaNodeFix.setNodeStatus(NodeStatus.WORKING);
 
         RenewDecorate<DataNode> metaNode2 = new RenewDecorate(metaNodeFix);

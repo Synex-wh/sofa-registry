@@ -161,7 +161,7 @@ public class DataServerConfirmTest {
         private final CountDownLatch allDone;
 
         public NodeTest(URL nodeUrl, CountDownLatch allDone) {
-            super(nodeUrl, "DefaultDataCenter");
+            super(nodeUrl, "DefaultDataCenter", "a");
             this.allDone = allDone;
         }
 

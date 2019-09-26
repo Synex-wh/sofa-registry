@@ -81,12 +81,13 @@ public class DataServerChangeEventHandler extends AbstractEventHandler<DataServe
             Set<String> localDataServers = dataServerCache.getDataServers(
                 dataServerConfig.getLocalDataCenter()).keySet();
             //get changed dataservers
-            Map<String, Set<String>> changedMap = dataServerCache
+            Map<String, Map<String, DataNode>> changedMap = dataServerCache
                 .compareAndSet(dataServerChangeItem,event.getFromType());
             if(!changedMap.isEmpty()) {
-                for (Entry<String, Set<String>> changeEntry : changedMap.entrySet()) {
+                for (Entry<String, Map<String, DataNode>> changeEntry : changedMap.entrySet()) {
                     String dataCenter = changeEntry.getKey();
-                    Set<String> ips = changeEntry.getValue();
+                    Map<String, DataNode> dataNodeMap = changeEntry.getValue();
+                    Set<String> ips = dataNodeMap.keySet();
                     if (!CollectionUtils.isEmpty(ips)) {
                         for (String ip : ips) {
                             if (!StringUtils.equals(ip, DataServerConfig.IP)) {
@@ -94,7 +95,7 @@ public class DataServerChangeEventHandler extends AbstractEventHandler<DataServe
                                         .getDataServerNode(dataCenter, ip);
                                 if (dataServerNode == null || dataServerNode.getConnection() == null
                                         || !dataServerNode.getConnection().isFine()) {
-                                    connectDataServer(dataCenter, ip);
+                                    connectDataServer(dataCenter, ip,dataNodeMap.get(ip).getArea());
                                 }
                             }
                         }
@@ -150,7 +151,7 @@ public class DataServerChangeEventHandler extends AbstractEventHandler<DataServe
                                 if (connection != null && !connection.isFine()) {
                                     LOGGER.warn("[DataServerChangeEventHandler] dataServer connections is not fine,try to reconnect it,old connection={},dataCenter={},from:{}",
                                                     connection.getRemoteAddress(), dataCenter,event.getFromType());
-                                    connectDataServer(dataCenter, ip);
+                                    connectDataServer(dataCenter, ip,dataServerNode.getArea());
                                 }
                             }
                         });
@@ -166,7 +167,7 @@ public class DataServerChangeEventHandler extends AbstractEventHandler<DataServe
      * @param dataCenter
      * @param ip
      */
-    private void connectDataServer(String dataCenter, String ip) {
+    private void connectDataServer(String dataCenter, String ip, String area) {
         Connection conn = null;
         for (int tryCount = 0; tryCount < TRY_COUNT; tryCount++) {
             try {
@@ -190,7 +191,8 @@ public class DataServerChangeEventHandler extends AbstractEventHandler<DataServe
                         ip, dataCenter));
         }
         //maybe get dataNode from metaServer,current has not start! register dataNode info to factory,wait for connect task next execute
-        DataServerNodeFactory.register(new DataServerNode(ip, dataCenter, conn), dataServerConfig);
+        DataServerNodeFactory.register(new DataServerNode(ip, dataCenter, conn, area),
+            dataServerConfig);
     }
 
     /**

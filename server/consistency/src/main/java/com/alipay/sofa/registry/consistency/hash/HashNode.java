@@ -29,4 +29,12 @@ public interface HashNode {
      * @return node name
      */
     String getNodeName();
+
+    /**
+     * Get node area
+     * For backup node for different area
+     *
+     * @return
+     */
+    String getArea();
 }

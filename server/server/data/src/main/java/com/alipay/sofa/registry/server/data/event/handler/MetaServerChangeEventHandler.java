@@ -134,7 +134,7 @@ public class MetaServerChangeEventHandler extends AbstractEventHandler<MetaServe
                             @Override
                             public Object getRequestBody() {
                                 return new DataNode(new URL(DataServerConfig.IP), dataServerConfig
-                                    .getLocalDataCenter());
+                                    .getLocalDataCenter(), dataServerConfig.getDataArea());
                             }
 
                             @Override

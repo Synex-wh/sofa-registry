@@ -265,12 +265,12 @@ public class LocalDataServerChangeEventHandler extends
                         backupNodes = triadCache.get(dataInfoId);
                     } else {
                         backupNodes = consistentHash.getNUniqueNodesFor(dataInfoId,
-                            dataServerConfig.getStoreNodes());
+                            dataServerConfig.getStoreNodes(),dataServerConfig.getDataAreaSet());
                         triadCache.put(dataInfoId, backupNodes);
                     }
                     BackupTriad backupTriad = new BackupTriad(dataInfoId,
                         consistentHashOld.getNUniqueNodesFor(dataInfoId,
-                            dataServerConfig.getStoreNodes()));
+                            dataServerConfig.getStoreNodes(),dataServerConfig.getDataAreaSet()));
                     if (backupTriad != null) {
                         List<DataNode> newJoinedNodes = backupTriad.getNewJoined(backupNodes,
                             dataServerCache.getNotWorking());
@@ -387,7 +387,8 @@ public class LocalDataServerChangeEventHandler extends
                                         connection.getLocalAddress(), changeVersion);
                             }
                             //connect now and registry connect
-                            connectDataServer(dataServerConfig.getLocalDataCenter(), ip);
+                            connectDataServer(dataServerConfig.getLocalDataCenter(), ip,
+                                dataServerNode.getArea());
                             //maybe get dataNode from metaServer,current has not connected!wait for connect task execute
                             TimeUtil.randomDelay(1000);
                             continue;
@@ -429,7 +430,7 @@ public class LocalDataServerChangeEventHandler extends
          * @param dataCenter
          * @param ip
          */
-        private void connectDataServer(String dataCenter, String ip) {
+        private void connectDataServer(String dataCenter, String ip, String area) {
             Connection conn = null;
             for (int tryCount = 0; tryCount < TRY_COUNT; tryCount++) {
                 try {
@@ -459,7 +460,7 @@ public class LocalDataServerChangeEventHandler extends
                     "[LocalDataServerChangeEventHandler] connect dataserver in {} success,remote={},local={}",
                     dataCenter, conn.getRemoteAddress(), conn.getLocalAddress());
             //maybe get dataNode from metaServer,current has not start! register dataNode info to factory,wait for connect task next execute
-            DataServerNodeFactory.register(new DataServerNode(ip, dataCenter, conn),
+            DataServerNodeFactory.register(new DataServerNode(ip, dataCenter, conn, area),
                 dataServerConfig);
         }
     }
