@@ -52,7 +52,6 @@ public class PublisherConverter {
             publisher.setDataId(source.getDataId());
             publisher.setGroup(source.getGroup());
             publisher.setInstanceId(source.getInstanceId());
-            publisher.setRegisterId(source.getRegistId());
             publisher.setProcessId(source.getProcessId());
             publisher.setVersion(source.getVersion());
 
@@ -60,7 +59,13 @@ public class PublisherConverter {
             publisher.setRegisterTimestamp(System.currentTimeMillis());
 
             publisher.setClientRegisterTimestamp(source.getTimestamp());
-            publisher.setSourceAddress(new URL(source.getIp(), source.getPort()));
+            URL url = new URL(source.getIp(), source.getPort());
+            publisher.setSourceAddress(url);
+
+            // registerId must be associated with connectId
+            StringBuilder sb = new StringBuilder();
+            sb.append(url.getAddressString()).append(Converter.DELIMITER).append(source.getRegistId());
+            publisher.setRegisterId(sb.toString());
 
             publisher.setClientVersion(ClientVersion.StoreData);
 

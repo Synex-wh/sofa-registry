@@ -49,13 +49,19 @@ public class SubscriberConverter {
             subscriber.setDataId(source.getDataId());
             subscriber.setGroup(source.getGroup());
             subscriber.setInstanceId(source.getInstanceId());
-            subscriber.setRegisterId(source.getRegistId());
             subscriber.setProcessId(source.getProcessId());
             subscriber.setVersion(source.getVersion());
             subscriber.setRegisterTimestamp(System.currentTimeMillis());
             subscriber.setClientRegisterTimestamp(source.getTimestamp());
             subscriber.setScope(ScopeEnumConverter.convertToScope(source.getScope()));
-            subscriber.setSourceAddress(new URL(source.getIp(), source.getPort()));
+
+            URL url = new  URL(source.getIp(), source.getPort());
+            subscriber.setSourceAddress(url);
+
+            // registerId must be associated with connectId
+            StringBuilder sb = new StringBuilder();
+            sb.append(url.getAddressString()).append(Converter.DELIMITER).append(source.getRegistId());
+            subscriber.setRegisterId(sb.toString());
 
             subscriber.setClientVersion(ClientVersion.StoreData);
 
@@ -84,11 +90,17 @@ public class SubscriberConverter {
             watcher.setDataId(source.getDataId());
             watcher.setGroup(source.getGroup());
             watcher.setInstanceId(source.getInstanceId());
-            watcher.setRegisterId(source.getRegistId());
             watcher.setProcessId(source.getProcessId());
             watcher.setVersion(source.getVersion());
             watcher.setRegisterTimestamp(source.getTimestamp());
-            watcher.setSourceAddress(new URL(source.getIp(), source.getPort()));
+
+            URL url = new  URL(source.getIp(), source.getPort());
+            watcher.setSourceAddress(url);
+
+            // registerId must be associated with connectId
+            StringBuilder sb = new StringBuilder();
+            sb.append(url.getAddressString()).append(Converter.DELIMITER).append(source.getRegistId());
+            watcher.setRegisterId(sb.toString());
 
             watcher.setClientVersion(ClientVersion.StoreData);
 
