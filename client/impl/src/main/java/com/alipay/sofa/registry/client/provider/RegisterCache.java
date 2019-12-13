@@ -98,6 +98,21 @@ public class RegisterCache {
         }
     }
 
+    public void replacePublisher(String registId, Publisher newPub) {
+        publisherMap.remove(registId);
+        publisherMap.put(newPub.getRegistId(), newPub);
+    }
+
+    public void replaceSubscribe(String registId, Subscriber newSub) {
+        subscriberMap.remove(registId);
+        subscriberMap.put(newSub.getRegistId(), newSub);
+    }
+
+    public void replaceConfigurator(String registId, Configurator newConfig) {
+        configuratorMap.remove(registId);
+        configuratorMap.put(newConfig.getRegistId(), newConfig);
+    }
+
     /**
      * Gets publisher by regist id.
      *

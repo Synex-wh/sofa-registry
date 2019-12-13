@@ -50,7 +50,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class DefaultSubscriber extends AbstractInternalRegister implements Subscriber {
 
-    private final String                           REGIST_ID;
     private SubscriberDataObserver                 dataObserver;
     private ConcurrentHashMap<String, SegmentData> data              = new ConcurrentHashMap<String, SegmentData>();
     private AtomicBoolean                          init              = new AtomicBoolean(false);

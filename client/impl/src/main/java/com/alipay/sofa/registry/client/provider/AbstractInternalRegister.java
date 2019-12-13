@@ -60,6 +60,8 @@ public abstract class AbstractInternalRegister implements Register {
 
     private ReadWriteLock    lock           = new ReentrantReadWriteLock();
 
+    protected String         REGIST_ID;
+
     /**
      * The Read lock.
      */
@@ -235,6 +237,8 @@ public abstract class AbstractInternalRegister implements Register {
             this.timestamp = System.currentTimeMillis();
             this.ackVersion = new AtomicLong(initialVersion.longValue());
             this.requestId = UUID.randomUUID().toString();
+            //new connect
+            this.REGIST_ID = UUID.randomUUID().toString();
         } finally {
             writeLock.unlock();
         }

@@ -41,7 +41,6 @@ import java.util.UUID;
  */
 public class DefaultPublisher extends AbstractInternalRegister implements Publisher {
 
-    private final String          REGIST_ID;
     private PublisherRegistration registration;
     private Worker                worker;
     private Collection<String>    dataList;
@@ -57,7 +56,7 @@ public class DefaultPublisher extends AbstractInternalRegister implements Publis
         this.registration = registration;
         this.worker = worker;
         this.config = config;
-        this.REGIST_ID = UUID.randomUUID().toString();
+        REGIST_ID = UUID.randomUUID().toString();
     }
 
     /**

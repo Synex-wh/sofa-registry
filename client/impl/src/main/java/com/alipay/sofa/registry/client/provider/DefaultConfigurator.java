@@ -39,7 +39,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version $Id : DefaultConfigurator.java, v 0.1 2018-04-18 14:41 zhuoyu.sjw Exp $$
  */
 public class DefaultConfigurator extends AbstractInternalRegister implements Configurator {
-    private final String             REGIST_ID;
 
     private ConfiguratorRegistration registration;
 

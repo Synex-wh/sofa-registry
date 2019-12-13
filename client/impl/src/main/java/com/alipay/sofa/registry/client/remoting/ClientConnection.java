@@ -193,7 +193,9 @@ public class ClientConnection implements Client {
             Collection<Publisher> publishers = registerCache.getAllPublishers();
             for (Publisher publisher : publishers) {
                 try {
+                    String id = publisher.getRegistId();
                     publisher.reset();
+                    registerCache.replacePublisher(id, publisher);
                     eventList.add(new TaskEvent(publisher));
                 } catch (Exception e) {
                     LOGGER.error("[connection] Publisher reset error, {}", publisher, e);
@@ -203,7 +205,9 @@ public class ClientConnection implements Client {
             Collection<Subscriber> subscribers = registerCache.getAllSubscribers();
             for (Subscriber subscriber : subscribers) {
                 try {
+                    String id = subscriber.getRegistId();
                     subscriber.reset();
+                    registerCache.replaceSubscribe(id, subscriber);
                     eventList.add(new TaskEvent(subscriber));
                 } catch (Exception e) {
                     LOGGER.error("[connection] Subscriber reset error, {}", subscriber, e);
@@ -213,7 +217,9 @@ public class ClientConnection implements Client {
             Collection<Configurator> configurators = registerCache.getAllConfigurator();
             for (Configurator configurator : configurators) {
                 try {
+                    String id = configurator.getRegistId();
                     configurator.reset();
+                    registerCache.replaceConfigurator(id, configurator);
                     eventList.add(new TaskEvent(configurator));
                 } catch (Exception e) {
                     LOGGER.error("[connection] Configurator reset error, {}", configurator, e);
