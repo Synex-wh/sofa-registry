@@ -222,10 +222,10 @@ public class MetaStoreService implements StoreService<MetaNode> {
         MetaNodeService metaNodeService = (MetaNodeService) ServiceFactory
             .getNodeService(NodeType.META);
 
-        Map<String, Collection<String>> metaMap = nodeConfig.getMetaNodeIP();
+        Collection<String> dataCenters = nodeConfig.getAllDataCenters();
 
-        if (metaMap != null && metaMap.size() > 0) {
-            for (String dataCenter : metaMap.keySet()) {
+        if (dataCenters != null && dataCenters.size() > 0) {
+            for (String dataCenter : dataCenters) {
                 //get other dataCenter meta
                 if (!nodeConfig.getLocalDataCenter().equals(dataCenter)) {
                     GetChangeListRequest getChangeListRequest = new GetChangeListRequest(

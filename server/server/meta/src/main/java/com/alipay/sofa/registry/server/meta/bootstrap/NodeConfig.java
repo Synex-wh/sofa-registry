@@ -35,23 +35,16 @@ public interface NodeConfig {
     Map<String, Collection<String>> getMetaNode();
 
     /**
-     * get other metaServer node ip
-     * @return
-     */
-    Map<String, Collection<String>> getMetaNodeIP();
-
-    /**
      * local data Center id
      * @return
      */
     String getLocalDataCenter();
 
     /**
-     * get dataCenter by meta node ipAddress
-     * @param metaIpAddress
+     * get all dataCenter
      * @return
      */
-    String getMetaDataCenter(String metaIpAddress);
+    Collection<String> getAllDataCenters();
 
     /**
      * get datacenter meta servers
@@ -59,5 +52,11 @@ public interface NodeConfig {
      * @return
      */
     Set<String> getDataCenterMetaServers(String dataCenter);
+
+    /**
+     * get local host (ip or domain)
+     * @return
+     */
+    String getLocalHost();
 
 }

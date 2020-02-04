@@ -103,7 +103,7 @@ public class MetaClientExchanger implements NodeExchanger {
      * connect other datacenter's metaServer
      */
     public void connectOtherMetaServer() {
-        Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNodeIP();
+        Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNode();
 
         StoreService storeService = ServiceFactory.getStoreService(NodeType.META);
         NodeChangeResult nodeChangeResult = storeService.getNodeChangeResult();
@@ -155,7 +155,7 @@ public class MetaClientExchanger implements NodeExchanger {
                 }
             }
 
-            Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNodeIP();
+            Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNode();
             StoreService storeService = ServiceFactory.getStoreService(NodeType.META);
             Map<String, Map<String, MetaNode>> registerNodes = storeService.getNodeChangeResult()
                 .getNodes();
