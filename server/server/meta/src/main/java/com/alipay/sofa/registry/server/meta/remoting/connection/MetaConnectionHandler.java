@@ -38,13 +38,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MetaConnectionHandler extends AbstractServerHandler implements NodeConnectManager {
 
-    private static final Logger                                                      LOGGER      = LoggerFactory
-                                                                                                     .getLogger(MetaConnectionHandler.class);
+    private static final Logger                          LOGGER      = LoggerFactory
+                                                                         .getLogger(MetaConnectionHandler.class);
 
     @Autowired
-    private NodeConfig                                                               nodeConfig;
+    private NodeConfig                                   nodeConfig;
 
-    private Map<String/*dataCenter*/, Map<String/*connectId*/, InetSocketAddress>> connections = new ConcurrentHashMap<>();
+    //private Map<String/*dataCenter*/, Map<String/*connectId*/, InetSocketAddress>> connections = new ConcurrentHashMap<>();
+
+    private Map<String/*connectId*/, InetSocketAddress> connections = new ConcurrentHashMap<>();
 
     @Override
     public void connected(Channel channel) throws RemotingException {
@@ -67,47 +69,20 @@ public class MetaConnectionHandler extends AbstractServerHandler implements Node
     public void addConnection(Channel channel) {
         InetSocketAddress remoteAddress = channel.getRemoteAddress();
         String connectId = NetUtil.toAddressString(remoteAddress);
-        String ipAddress = remoteAddress.getAddress().getHostAddress();
 
-        String dataCenter = nodeConfig.getMetaDataCenter(ipAddress);
-        if (dataCenter != null) {
-            Map<String/*connectId*/, InetSocketAddress> connectMap = connections.get(dataCenter);
-            if (connectMap == null) {
-                final Map<String, InetSocketAddress> newMap = new ConcurrentHashMap<>();
-                connectMap = connections.putIfAbsent(dataCenter, newMap);
-                if (connectMap == null) {
-                    connectMap = newMap;
-                }
-            }
-            connectMap.putIfAbsent(connectId, remoteAddress);
-        }
+        connections.putIfAbsent(connectId, remoteAddress);
     }
 
     @Override
     public boolean removeConnection(Channel channel) {
         InetSocketAddress remoteAddress = channel.getRemoteAddress();
         String connectId = NetUtil.toAddressString(remoteAddress);
-        String ipAddress = remoteAddress.getAddress().getHostAddress();
-
-        String dataCenter = nodeConfig.getMetaDataCenter(ipAddress);
-        if (dataCenter != null) {
-            Map<String/*connectId*/, InetSocketAddress> connectMap = connections.get(dataCenter);
-            if (connectMap != null) {
-                connectMap.remove(connectId);
-                return true;
-            }
-        }
-        return false;
+        return connections.remove(connectId) != null;
     }
 
     @Override
     public Collection<InetSocketAddress> getConnections(String dataCenter) {
-        Map<String/*connectId*/, InetSocketAddress> connectMap = connections.get(dataCenter);
-        if (connectMap == null || connectMap.isEmpty()) {
-            LOGGER.error("Can not find connection of dataCenter {}", dataCenter);
-            throw new RuntimeException("Can not find connection of dataCenter:" + dataCenter);
-        }
-        return connectMap.values();
+        return connections.values();
     }
 
     @Override

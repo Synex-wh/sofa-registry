@@ -16,16 +16,6 @@
  */
 package com.alipay.sofa.registry.server.meta.remoting;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alipay.sofa.registry.common.model.Node.NodeType;
 import com.alipay.sofa.registry.common.model.metaserver.MetaNode;
 import com.alipay.sofa.registry.common.model.metaserver.NodeChangeResult;
@@ -43,6 +33,15 @@ import com.alipay.sofa.registry.server.meta.bootstrap.MetaServerConfig;
 import com.alipay.sofa.registry.server.meta.bootstrap.NodeConfig;
 import com.alipay.sofa.registry.server.meta.bootstrap.ServiceFactory;
 import com.alipay.sofa.registry.server.meta.store.StoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -103,7 +102,7 @@ public class MetaClientExchanger implements NodeExchanger {
      * connect other datacenter's metaServer
      */
     public void connectOtherMetaServer() {
-        Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNodeIP();
+        Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNode();
 
         StoreService storeService = ServiceFactory.getStoreService(NodeType.META);
         NodeChangeResult nodeChangeResult = storeService.getNodeChangeResult();
@@ -155,7 +154,7 @@ public class MetaClientExchanger implements NodeExchanger {
                 }
             }
 
-            Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNodeIP();
+            Map<String, Collection<String>> configMetaNodeIP = nodeConfig.getMetaNode();
             StoreService storeService = ServiceFactory.getStoreService(NodeType.META);
             Map<String, Map<String, MetaNode>> registerNodes = storeService.getNodeChangeResult()
                 .getNodes();

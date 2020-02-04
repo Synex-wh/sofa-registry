@@ -16,15 +16,6 @@
  */
 package com.alipay.sofa.registry.server.meta.remoting;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alipay.sofa.jraft.CliService;
 import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.conf.Configuration;
@@ -47,6 +38,12 @@ import com.alipay.sofa.registry.server.meta.bootstrap.MetaServerConfig;
 import com.alipay.sofa.registry.server.meta.bootstrap.NodeConfig;
 import com.alipay.sofa.registry.server.meta.executor.ExecutorManager;
 import com.alipay.sofa.registry.server.meta.registry.Registry;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -87,7 +84,7 @@ public class RaftExchanger {
     public void startRaftServer(final ExecutorManager executorManager) {
         try {
             if (serverStart.compareAndSet(false, true)) {
-                String serverId = NetUtil.genHost(NetUtil.getLocalAddress().getHostAddress(),
+                String serverId = NetUtil.genHost(nodeConfig.getLocalHost(),
                     metaServerConfig.getRaftServerPort());
                 String serverConf = getServerConfig();
 
@@ -99,8 +96,8 @@ public class RaftExchanger {
                         LOGGER_START.info("Start leader process...");
                         executorManager.startScheduler();
                         LOGGER_START.info("Initialize server scheduler success!");
-                        PeerId leader = new PeerId(NetUtil.getLocalAddress().getHostAddress(),
-                            metaServerConfig.getRaftServerPort());
+                        PeerId leader = new PeerId(nodeConfig.getLocalHost(), metaServerConfig
+                            .getRaftServerPort());
                         // refer: https://github.com/sofastack/sofa-registry/issues/30
                         registerCurrentNode();
                         raftServer.sendNotify(leader, "leader");
@@ -111,8 +108,8 @@ public class RaftExchanger {
                         LOGGER_START.info("Stop leader process...");
                         executorManager.stopScheduler();
                         LOGGER_START.info("Stop server scheduler success!");
-                        PeerId leader = new PeerId(NetUtil.getLocalAddress().getHostAddress(),
-                            metaServerConfig.getRaftServerPort());
+                        PeerId leader = new PeerId(nodeConfig.getLocalHost(), metaServerConfig
+                            .getRaftServerPort());
                         raftServer.sendNotify(leader, "leader");
                     }
                 });
@@ -194,22 +191,18 @@ public class RaftExchanger {
     }
 
     private void registerCurrentNode() {
-        Map<String, Collection<String>> metaMap = nodeConfig.getMetaNodeIP();
-        //if current ip existed in config list,register it
-        if (metaMap != null && metaMap.size() > 0) {
-            Collection<String> metas = metaMap.get(nodeConfig.getLocalDataCenter());
-            String ip = NetUtil.getLocalAddress().getHostAddress();
-            if (metas != null && metas.contains(ip)) {
-                metaServerRegistry.register(new MetaNode(new URL(ip, 0), nodeConfig
-                    .getLocalDataCenter()));
-            } else {
-                LOGGER_START.error(
-                    "Register CurrentNode fail!meta node list config not contains current ip {}",
-                    ip);
-                throw new RuntimeException(
-                    "Register CurrentNode fail!meta node list config not contains current ip!");
-            }
+
+        String domain = nodeConfig.getLocalHost();
+        if (domain != null) {
+            metaServerRegistry.register(new MetaNode(new URL(domain, 0), nodeConfig
+                .getLocalDataCenter()));
+        } else {
+            LOGGER_START
+                .error("Register CurrentNode fail!meta node list config not contains current ip");
+            throw new RuntimeException(
+                "Register CurrentNode fail!meta node list config not contains current ip!");
         }
+
     }
 
     /**

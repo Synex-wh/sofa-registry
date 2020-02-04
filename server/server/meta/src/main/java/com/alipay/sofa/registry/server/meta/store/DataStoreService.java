@@ -16,21 +16,6 @@
  */
 package com.alipay.sofa.registry.server.meta.store;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alipay.sofa.registry.common.model.Node.NodeType;
 import com.alipay.sofa.registry.common.model.metaserver.DataCenterNodes;
 import com.alipay.sofa.registry.common.model.metaserver.DataNode;
@@ -51,6 +36,20 @@ import com.alipay.sofa.registry.store.api.annotation.RaftReference;
 import com.alipay.sofa.registry.task.listener.TaskEvent;
 import com.alipay.sofa.registry.task.listener.TaskEvent.TaskType;
 import com.alipay.sofa.registry.task.listener.TaskListenerManager;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -439,10 +438,10 @@ public class DataStoreService implements StoreService<DataNode> {
         MetaNodeService metaNodeService = (MetaNodeService) ServiceFactory
             .getNodeService(NodeType.META);
 
-        Map<String, Collection<String>> metaMap = nodeConfig.getMetaNodeIP();
+        Collection<String> dataCenters = nodeConfig.getAllDataCenters();
 
-        if (metaMap != null && metaMap.size() > 0) {
-            for (String dataCenter : metaMap.keySet()) {
+        if (dataCenters != null && dataCenters.size() > 0) {
+            for (String dataCenter : dataCenters) {
                 //get other dataCenter dataNodes
                 if (!nodeConfig.getLocalDataCenter().equals(dataCenter)) {
                     GetChangeListRequest getChangeListRequest = new GetChangeListRequest(

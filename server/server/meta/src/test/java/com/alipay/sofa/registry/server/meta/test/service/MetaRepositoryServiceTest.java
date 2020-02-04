@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,22 +55,24 @@ public class MetaRepositoryServiceTest {
             }
 
             @Override
-            public Map<String, Collection<String>> getMetaNodeIP() {
-                return null;
-            }
-
-            @Override
             public String getLocalDataCenter() {
                 return dataCenter;
             }
 
             @Override
-            public String getMetaDataCenter(String metaIpAddress) {
-                return dataCenter;
+            public Collection<String> getAllDataCenters() {
+                Set<String> set = new HashSet<>();
+                set.add(dataCenter);
+                return set;
             }
 
             @Override
             public Set<String> getDataCenterMetaServers(String dataCenter) {
+                return null;
+            }
+
+            @Override
+            public String getLocalHost() {
                 return null;
             }
         });
@@ -96,22 +99,24 @@ public class MetaRepositoryServiceTest {
             }
 
             @Override
-            public Map<String, Collection<String>> getMetaNodeIP() {
-                return null;
-            }
-
-            @Override
             public String getLocalDataCenter() {
                 return dataCenter;
             }
 
             @Override
-            public String getMetaDataCenter(String metaIpAddress) {
-                return dataCenter;
+            public Collection<String> getAllDataCenters() {
+                Set<String> set = new HashSet<>();
+                set.add(dataCenter);
+                return set;
             }
 
             @Override
             public Set<String> getDataCenterMetaServers(String dataCenter) {
+                return null;
+            }
+
+            @Override
+            public String getLocalHost() {
                 return null;
             }
         });
@@ -141,22 +146,24 @@ public class MetaRepositoryServiceTest {
             }
 
             @Override
-            public Map<String, Collection<String>> getMetaNodeIP() {
-                return null;
-            }
-
-            @Override
             public String getLocalDataCenter() {
                 return dataCenter;
             }
 
             @Override
-            public String getMetaDataCenter(String metaIpAddress) {
-                return dataCenter;
+            public Collection<String> getAllDataCenters() {
+                Set<String> set = new HashSet<>();
+                set.add(dataCenter);
+                return set;
             }
 
             @Override
             public Set<String> getDataCenterMetaServers(String dataCenter) {
+                return null;
+            }
+
+            @Override
+            public String getLocalHost() {
                 return null;
             }
         });
@@ -196,22 +203,24 @@ public class MetaRepositoryServiceTest {
             }
 
             @Override
-            public Map<String, Collection<String>> getMetaNodeIP() {
-                return null;
-            }
-
-            @Override
             public String getLocalDataCenter() {
                 return dataCenter;
             }
 
             @Override
-            public String getMetaDataCenter(String metaIpAddress) {
-                return dataCenter;
+            public Collection<String> getAllDataCenters() {
+                Set<String> set = new HashSet<>();
+                set.add(dataCenter);
+                return set;
             }
 
             @Override
             public Set<String> getDataCenterMetaServers(String dataCenter) {
+                return null;
+            }
+
+            @Override
+            public String getLocalHost() {
                 return null;
             }
         });
