@@ -687,7 +687,8 @@ public class DataServerConfig {
                 if (localDataCenter != null && !localDataCenter.isEmpty()) {
                     Collection<String> metas = metaMap.get(localDataCenter);
                     if (metas != null && !metas.isEmpty()) {
-                        metaIps = metas.stream().map(NetUtil::getIPAddressFromDomain).collect(Collectors.toSet());
+                        //support domain
+                        metaIps = metas.stream().map(String::trim).collect(Collectors.toSet());
                     }
                 }
             }

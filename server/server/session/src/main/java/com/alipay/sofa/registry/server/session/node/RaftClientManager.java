@@ -21,7 +21,6 @@ import com.alipay.sofa.registry.common.model.constants.ValueConstants;
 import com.alipay.sofa.registry.jraft.bootstrap.RaftClient;
 import com.alipay.sofa.registry.log.Logger;
 import com.alipay.sofa.registry.log.LoggerFactory;
-import com.alipay.sofa.registry.net.NetUtil;
 import com.alipay.sofa.registry.server.session.bootstrap.CommonConfig;
 import com.alipay.sofa.registry.server.session.bootstrap.SessionServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,13 +90,8 @@ public class RaftClientManager {
             if (localDataCenter != null && !localDataCenter.isEmpty()) {
                 Collection<String> metas = metaMap.get(localDataCenter);
                 if (metas != null && !metas.isEmpty()) {
-                    metas.forEach(domain -> {
-                        String ip = NetUtil.getIPAddressFromDomain(domain);
-                        if (ip == null) {
-                            throw new RuntimeException("Node config convert domain {" + domain + "} error!");
-                        }
-                        metaIps.add(ip);
-                    });
+                    //support domain
+                    metaIps = metas.stream().map(String::trim).collect(Collectors.toSet());
                 }
             }
         }
