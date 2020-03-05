@@ -21,7 +21,6 @@ import com.alipay.sofa.registry.common.model.Node.NodeType;
 import com.alipay.sofa.registry.common.model.metaserver.MetaNode;
 import com.alipay.sofa.registry.common.model.store.URL;
 import com.alipay.sofa.registry.core.model.Result;
-import com.alipay.sofa.registry.net.NetUtil;
 import com.alipay.sofa.registry.server.meta.bootstrap.NodeConfig;
 import com.alipay.sofa.registry.server.meta.registry.Registry;
 import com.alipay.sofa.registry.server.meta.remoting.RaftExchanger;
@@ -85,9 +84,6 @@ public class MetaStoreResource {
             return result;
         }
 
-        //domain -> ip
-        ipAddressList0 = ipAddressList0.stream().map(NetUtil::getIPAddressFromDomain).collect(Collectors.toList());
-
         try {
             raftExchanger.changePeer(ipAddressList0);
 
@@ -98,7 +94,8 @@ public class MetaStoreResource {
 
             List<MetaNode> metaNodes = Lists.newArrayList();
             for (String ipAddress : ipAddressList0) {
-                MetaNode metaNode = new MetaNode(new URL(ipAddress, 0), nodeConfig.getLocalDataCenter());
+                MetaNode metaNode = new MetaNode(new URL(ipAddress, 0),
+                    nodeConfig.getLocalDataCenter());
                 metaNodes.add(metaNode);
             }
 
@@ -139,15 +136,13 @@ public class MetaStoreResource {
             return result;
         }
 
-        //domain -> ip
-        ipAddressList0 = ipAddressList0.stream().map(NetUtil::getIPAddressFromDomain).collect(Collectors.toList());
-
         try {
             raftExchanger.resetPeer(ipAddressList0);
 
             List<MetaNode> metaNodes = Lists.newArrayList();
             for (String ipAddress : ipAddressList0) {
-                MetaNode metaNode = new MetaNode(new URL(ipAddress, 0), nodeConfig.getLocalDataCenter());
+                MetaNode metaNode = new MetaNode(new URL(ipAddress, 0),
+                    nodeConfig.getLocalDataCenter());
                 metaNodes.add(metaNode);
             }
             metaServerRegistry.setNodes(metaNodes);
@@ -181,8 +176,6 @@ public class MetaStoreResource {
                         return;
                     }
 
-                    //domain -> ip
-                    ipAddress = NetUtil.getIPAddressFromDomain(ipAddress);
 
                     raftExchanger.removePeer(ipAddress);
                     metaServerRegistry.cancel(ipAddress, NodeType.META);
